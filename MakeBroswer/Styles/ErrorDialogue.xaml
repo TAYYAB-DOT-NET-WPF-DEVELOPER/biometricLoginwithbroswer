@@ -1,0 +1,63 @@
+﻿<Window x:Class="Back_Office.Styles.ErrorDialogue"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Back_Office.Styles"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen" 
+        WindowStyle="None"
+        Background="Transparent" 
+        AllowsTransparency="True"
+        ResizeMode="NoResize" 
+        WindowState="Normal" 
+        FontFamily="Poppins"
+        Title="Error Dialogue" 
+        MinHeight="300" 
+        Height="320"
+        Width="200">
+    <Border CornerRadius="10" Background="{DynamicResource PrimaryErrorBG}">
+        <Grid HorizontalAlignment="Stretch"
+              VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="170"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Center">
+                <Image Source="/Assets/Images/rocket-down.png" Stretch="UniformToFill" RenderTransformOrigin="0.5,0.5">
+                    <Image.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleX="0.8" ScaleY="0.8"/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Image.RenderTransform>
+                </Image>
+            </StackPanel>
+            <StackPanel Grid.Row="1" HorizontalAlignment="Center">
+                <Label Content="Oops!" Foreground="#444141" FontWeight="Bold" FontSize="18" HorizontalContentAlignment="Center"/>
+                <Viewbox>
+                    <TextBlock  x:Name="ErrorMessageText"
+                       TextWrapping="Wrap" 
+                       HorizontalAlignment="Center" 
+                       VerticalAlignment="Center" 
+                       Width="200" 
+                       MaxHeight="100"
+                       Margin="0,5" 
+                       TextAlignment="Center" 
+                       Foreground="{StaticResource PrimaryErrorText}" 
+                       FontSize="14" 
+                       FontWeight="SemiBold" />
+                </Viewbox>
+                </StackPanel>
+
+            <Button Grid.Row="2" Content="Cancel" 
+                    Style="{DynamicResource ExitButton}" 
+                    Click="OKButton_Click" Margin="0,10,0,0"/>
+        </Grid>
+        
+        
+    </Border>
+</Window>

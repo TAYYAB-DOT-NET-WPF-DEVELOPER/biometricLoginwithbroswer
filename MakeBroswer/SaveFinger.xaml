@@ -1,0 +1,130 @@
+﻿<Window x:Class="biometric_Login.SaveFinger"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        
+        xmlns:local="clr-namespace:biometric_Login" xmlns:viewmodels="clr-namespace:biometric_Login.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:UserRegistrationVM}"
+        mc:Ignorable="d"
+        Title="Save Form"  Height="450" 
+        Width="800"
+        WindowStartupLocation="CenterScreen" 
+        WindowStyle="None"
+        Background="Transparent" 
+        AllowsTransparency="True"
+        ResizeMode="NoResize" 
+        WindowState="Normal" 
+        FontFamily="Poppins">
+    <!--<Window.Resources>
+        <local:ByteArrayToImageConverter x:Key="ByteArrayToImageConverter" />
+    </Window.Resources>-->
+    <Border CornerRadius="5" Background="{DynamicResource PrimaryBackgroundColor}">
+        <Grid HorizontalAlignment="Stretch" 
+         VerticalAlignment="Stretch">
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Grid.Row="0" HorizontalAlignment="Left">
+                    <Label Content="User Registration"
+                         Margin="10,5,5,5"
+                         Foreground="{DynamicResource TertiaryTextColor}" 
+                         FontWeight="SemiBold" FontSize="18" 
+                         VerticalAlignment="Center" 
+                         HorizontalAlignment="Left"/>
+                </StackPanel>
+                <StackPanel Grid.Row="0" Grid.Column="4" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,5,10,0" Height="30" Orientation="Horizontal" FlowDirection="RightToLeft">
+                    <!--<Button x:Name="btnClose" Style="{StaticResource IconButtonsStyle}" Content="{DynamicResource close}" Tag="IsCloseButton" Command="{Binding CloseWindowCommand}"/>-->
+                    <Button x:Name="btnClose" Style="{StaticResource IconButtonsStyle}" Content="{DynamicResource close}" Tag="IsCloseButton" Command="{Binding CloseWindowCommand}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}}" />
+
+                </StackPanel>
+                <Separator Grid.Row="0" Background="{DynamicResource TertiaryBackgroundColor}" VerticalAlignment="Bottom"/>
+
+                <!-- Top Section -->
+                <Grid Grid.Row="1" Margin="5">
+                    <Border Background="#edf4ff"
+                   CornerRadius="5"
+                   Opacity=".65">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="35" ShadowDepth="0" Color="#C0C9EA" Opacity="0.5"/>
+                        </Border.Effect>
+                    </Border>
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="1" 
+                           Content="Save" 
+                           Style="{DynamicResource CreateButton}" 
+                           Command="{Binding SaveCommand}" 
+                           Margin="5" />
+                        </Grid>
+                    </StackPanel>
+                </Grid>
+
+                <Grid Grid.Row="2" Margin="5">
+                    <Border Background="#edf4ff"
+                      CornerRadius="5"
+                      Opacity=".65">
+                        <Border.Effect>
+                            <DropShadowEffect BlurRadius="35" ShadowDepth="0" Color="#C0C9EA" Opacity="0.5"/>
+                        </Border.Effect>
+                    </Border>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="Discription" Foreground="{DynamicResource TertiaryTextColor}" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" HorizontalContentAlignment="Left" HorizontalAlignment="Left"/>
+                                <TextBlock Text="*" Foreground="Red" FontWeight="Bold" FontSize="18" x:Name="redAsterisk" Visibility="{Binding RedAsteriskVisibility}" />
+                            </StackPanel>
+                            <TextBox x:Name="description" 
+                            Style="{DynamicResource TextBoxStyle}"
+                            Width="250"
+                            Text="{Binding DescriptionText, UpdateSourceTrigger=PropertyChanged}" />
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="Finger Devices" Foreground="{DynamicResource TertiaryTextColor}" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" HorizontalContentAlignment="Left" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                            <ComboBox Width="250"
+                            Height="40"
+                            Style="{DynamicResource ComboBoxStyle1}" 
+                            ItemsSource="{Binding Devices}" />
+                        </StackPanel>
+                        <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <StackPanel Orientation="Horizontal">
+                                <Label Content="Image" Foreground="{DynamicResource TertiaryTextColor}" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" HorizontalContentAlignment="Left" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <!--<Image Source="{Binding SelectedImage, Converter={StaticResource ByteArrayToImageConverter}}" Width="200" Height="200" />-->
+                            </StackPanel>
+                        </StackPanel>
+
+                        
+
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+
+    </Border>
+
+
+</Window>

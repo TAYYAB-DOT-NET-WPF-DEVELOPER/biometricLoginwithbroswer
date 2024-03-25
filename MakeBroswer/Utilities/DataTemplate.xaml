@@ -1,0 +1,92 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   
+                    >
+    <!--<DataTemplate DataType="{x:Type vm:PriviligesViewVM}">
+        <view:PriviligesView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SecurityLevelViewVM}">
+        <view:SecurityLevelView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:JobposVM}">
+        <view:JobposView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:EmployeeViewVM}">
+        <view:EmployeeView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:SummaryGroupViewVM}">
+        <view:SummaryGroupView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:CategoryViewVM}">
+        <view:CategoryView/>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type vm:JobposFormVM}">
+        <view:JobposForm/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:PriviligesFormVM}">
+        <view:PriviligesForm/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SecurityLevelFormVM}">
+        <view:SecurityLevelForm/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:QuestionViewVM}">
+        <view:QuestionsView/>
+    </DataTemplate>
+    
+    <DataTemplate DataType="{x:Type vm:QuestionsAnswersVM}">
+        <view:QuestionAnswersForm/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:EmployeeFormVM}">
+        <view:EmployeeForm/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:MethodPayViewVM}">
+        <view:MethodPayView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:MethodPayFormVM}">
+        <view:MethodPayForm/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SalesTypeFormVM}">
+        <view:SalesTypeForm/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:SalesTypeViewVM}">
+        <view:SalesTypeView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:ProductViewVM}">
+        <view:ProductView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:MainProductFormVM}">
+        <view:MainProductForm/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:CouponsViewVM}">
+        <view:CouponsView/>
+    </DataTemplate>
+
+    <DataTemplate DataType="{x:Type vm:CouponsFormVM}">
+        <view:CouponsFormView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:TableViewVM}">
+        <view:TableView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:TableFormVM}">
+        <view:TableFormWindow/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:SystemInfoViewVM}">
+        <view:SystemInfoView/>
+    </DataTemplate>
+    <DataTemplate DataType="{x:Type vm:SystemInfoFormVM}">
+        <view:SystemInfoForm/>
+    </DataTemplate>-->
+
+
+</ResourceDictionary>
