@@ -1,0 +1,49 @@
+﻿<Window x:Class="biometric_Login.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:biometric_Login"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+         
+  
+  WindowStartupLocation="CenterScreen" 
+  WindowStyle="None"
+   Background="Transparent" 
+  AllowsTransparency="True"
+  ResizeMode="NoResize" 
+  WindowState="Normal" 
+  FontFamily="Poppins">
+    <Grid>
+        <StackPanel>
+            <!-- Header -->
+            <TextBlock Text="Web Navigator" 
+                       Margin="10" 
+                       FontSize="20" 
+                       FontWeight="SemiBold" 
+                       Foreground="#FF007ACC" 
+                       HorizontalAlignment="Center"/>
+
+            <!-- URL Entry -->
+            <Grid>
+                <TextBox x:Name="UrlTextBox" 
+                         Style="{DynamicResource UrlTextBoxStyle}" />
+                <TextBlock Text="Enter URL here..." 
+                           Foreground="Gray"
+                           Margin="5,0,0,0"
+                           Visibility="Collapsed"
+                           x:Name="PlaceholderText"
+                           />
+            </Grid>
+
+            <!-- Navigation Button -->
+            <Button Content="Navigate" 
+                    Command="{Binding NavigateCommand}" 
+                    Style="{DynamicResource ActionButtonStyle}"/>
+
+            <!-- Web Browser Control -->
+            <WebBrowser x:Name="Browser" Margin="10"/>
+        </StackPanel>
+    </Grid>
+</Window>

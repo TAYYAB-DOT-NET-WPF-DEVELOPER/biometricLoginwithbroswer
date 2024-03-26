@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        
+        xmlns:viewmodel="clr-namespace:biometric_Login.ViewModels"
         xmlns:local="clr-namespace:biometric_Login" xmlns:viewmodels="clr-namespace:biometric_Login.ViewModels" d:DataContext="{d:DesignInstance Type=viewmodels:UserRegistrationVM}"
         mc:Ignorable="d"
         Title="Save Form"  Height="450" 
@@ -18,6 +18,11 @@
     <!--<Window.Resources>
         <local:ByteArrayToImageConverter x:Key="ByteArrayToImageConverter" />
     </Window.Resources>-->
+    <Window.Resources>
+        <!-- Define the ByteArrayToImageConverter -->
+        <viewmodel:ByteArrayToImageConverter x:Key="ByteArrayToImageConverter" />
+
+    </Window.Resources>
     <Border CornerRadius="5" Background="{DynamicResource PrimaryBackgroundColor}">
         <Grid HorizontalAlignment="Stretch" 
          VerticalAlignment="Stretch">
@@ -99,21 +104,13 @@
                             Text="{Binding DescriptionText, UpdateSourceTrigger=PropertyChanged}" />
                         </StackPanel>
 
-                        <StackPanel Grid.Row="3" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <StackPanel Orientation="Horizontal">
-                                <Label Content="Finger Devices" Foreground="{DynamicResource TertiaryTextColor}" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" HorizontalContentAlignment="Left" HorizontalAlignment="Left"/>
-                            </StackPanel>
-                            <ComboBox Width="250"
-                            Height="40"
-                            Style="{DynamicResource ComboBoxStyle1}" 
-                            ItemsSource="{Binding Devices}" />
-                        </StackPanel>
+                        
                         <StackPanel Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <StackPanel Orientation="Horizontal">
                                 <Label Content="Image" Foreground="{DynamicResource TertiaryTextColor}" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" HorizontalContentAlignment="Left" HorizontalAlignment="Left"/>
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
-                                <!--<Image Source="{Binding SelectedImage, Converter={StaticResource ByteArrayToImageConverter}}" Width="200" Height="200" />-->
+                                <Image Source="{Binding SelectedImage, Converter={StaticResource ByteArrayToImageConverter}}" Width="200" Height="200" />
                             </StackPanel>
                         </StackPanel>
 

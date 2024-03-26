@@ -1,4 +1,5 @@
-﻿using biometric_Login;
+﻿
+using biometric_Login;
 using biometric_Login.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -28,6 +29,15 @@ namespace MakeBroswer
         private void ConfigureServices()
         {
             IServiceCollection services = new ServiceCollection();
+            services.AddSingleton<LoginVM>();
+            services.AddSingleton(s => new LoginWindow
+            {
+                DataContext = s.GetRequiredService<LoginVM>()
+            });services.AddSingleton<MainWindowVM>();
+            services.AddSingleton(s => new MainWindow
+            {
+                DataContext = s.GetRequiredService<MainWindowVM>()
+            });
 
             services.AddSingleton<UserRegistrationVM>();
             services.AddSingleton(s => new SaveFinger
@@ -43,7 +53,7 @@ namespace MakeBroswer
         {
             base.OnStartup(e);
 
-            MainWindow = _serviceprovider.GetRequiredService<SaveFinger>();
+            MainWindow = _serviceprovider.GetRequiredService<LoginWindow>();
             MainWindow.Show();
         }
     }

@@ -25,8 +25,11 @@ namespace biometric_Login.ViewModels
         {
             SaveCommand = new RelayCommand(parameter => button1_Click(parameter));
 
+            CloseWindowCommand = new RelayCommand(closeWindow);
+
             //InitializeComponent();
         }
+        public ICommand CloseWindowCommand { get; }
         private static DataResult<Fmd> _resultEnrollment;
 
         public static DataResult<Fmd> ResultEnrollment
@@ -140,6 +143,14 @@ namespace biometric_Login.ViewModels
             catch (Exception ex)
             {
                 MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+        private void closeWindow(object obj)
+        {
+            frmDBEnrollment_FormClosing(obj);
+            if (obj is Window window)
+            {
+                window.Close();
             }
         }
 
@@ -277,9 +288,9 @@ namespace biometric_Login.ViewModels
 
                 if (Devices.Count > 0)
                 {
+                    ShowSuccessDialog("Finger Print Device Connected Successfully");
                     SelectedDevice = Devices[0];
-                    //btnCaps.Enabled = true;
-                    //btnSelect.Enabled = true;
+                   
                 }
                 else
                 {
@@ -301,7 +312,7 @@ namespace biometric_Login.ViewModels
             // Reset variables
             LoadScanners();
             firstFinger = null;
-            resultEnrollment = null;
+            _resultEnrollment = null;
             preenrollmentFmds = new List<Fmd>();
           //  pbFingerprint.Image = null;
             if (CurrentReader != null)
@@ -382,76 +393,7 @@ namespace biometric_Login.ViewModels
         /// Handler for when a fingerprint is captured.
         /// </summary>
         /// <param name="captureResult">contains info and data on the fingerprint capture</param>
-        //public void OnCaptured(CaptureResult captureResult)
-        //{
-        //    try
-        //    {
-        //        // Check capture quality and throw an error if bad.
-        //        if (!CheckCaptureResult(captureResult)) return;
-
-        //        // Create bitmap
-        //        foreach (Fid.Fiv fiv in captureResult.Data.Views)
-        //        {
-        //            SendMessage(Action.SendBitmap, CreateBitmap(fiv.RawImage, fiv.Width, fiv.Height));
-        //        }
-
-        //        //Enrollment Code:
-        //        try
-        //        {
-        //            count++;
-        //            // Check capture quality and throw an error if bad.
-        //            DataResult<Fmd> resultConversion = FeatureExtraction.CreateFmdFromFid(captureResult.Data, Constants.Formats.Fmd.ANSI);
-
-        //           // MessageBox.Show("A finger was captured.  \r\nCount:  " + (count));
-        //            ShowErrorDialog("A finger was captured: " + (count));
-
-        //            if (resultConversion.ResultCode != Constants.ResultCode.DP_SUCCESS)
-        //            {
-        //                Reset = true;
-        //                throw new Exception(resultConversion.ResultCode.ToString());
-        //            }
-
-        //            preenrollmentFmds.Add(resultConversion.Data);
-
-        //            if (count >= 4)
-        //            {
-        //                resultEnrollment = DPUruNet.Enrollment.CreateEnrollmentFmd(Constants.Formats.Fmd.ANSI, preenrollmentFmds);
-
-        //                if (resultEnrollment.ResultCode == Constants.ResultCode.DP_SUCCESS)
-        //                {
-        //                    preenrollmentFmds.Clear();
-        //                    count = 0;
-        //                    //obj_bal_ForAll.BAL_StoreCustomerFPData("tbl_Finger", txtledgerId.Text, Fmd.SerializeXml(resultEnrollment.Data));
-        //                    //MessageBox.Show("Customer Finger Print was successfully enrolled.");
-
-        //                    return;
-        //                }
-        //                else if (resultEnrollment.ResultCode == Constants.ResultCode.DP_ENROLLMENT_INVALID_SET)
-        //                {
-        //                    SendMessage(Action.SendMessage, "Enrollment was unsuccessful.  Please try again.");
-        //                    preenrollmentFmds.Clear();
-        //                    count = 0;
-        //                    return;
-        //                }
-
-        //            }
-        //          //  MessageBox.Show("Now place the same finger on the reader.");
-        //            ShowErrorDialog("Now place the same finger on the reader.");
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            // Send error message, then close form
-        //            SendMessage(Action.SendMessage, "Error:  " + ex.Message);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Send error message, then close form
-        //        SendMessage(Action.SendMessage, "Error:  " + ex.Message);
-        //    }
-        //}
-      //  private object _lock = new object(); // Define a lock object for thread safety
-
+        
         private readonly object _lock = new object(); // Define a lock object for thread safety
 
         private void OnCaptured(CaptureResult captureResult)
@@ -474,7 +416,7 @@ namespace biometric_Login.ViewModels
                     // Check capture quality and throw an error if bad.
                     DataResult<Fmd> resultConversion = FeatureExtraction.CreateFmdFromFid(captureResult.Data, Constants.Formats.Fmd.ANSI);
 
-                    ShowErrorDialog("A finger was captured: " + (count));
+                    ShowSuccessDialog("A finger was captured: " + (count));
 
                     if (resultConversion.ResultCode != Constants.ResultCode.DP_SUCCESS)
                     {
@@ -505,7 +447,7 @@ namespace biometric_Login.ViewModels
                             }
                         }
                     }
-                    ShowErrorDialog("Now place the same finger on the reader.");
+                    ShowSuccessDialog("Now place the same finger on the reader.");
                 }
                 catch (Exception ex)
                 {
@@ -585,10 +527,10 @@ namespace biometric_Login.ViewModels
 
         public String connectionString = "Data Source = (DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 182.180.159.89)(PORT = 1521)))(CONNECT_DATA = (SERVER = DEDICATED)(SERVICE_NAME = SCAR))); User Id = KRC; Password=KRC;";
 
-        //private void frmDBEnrollment_FormClosing(object sender, FormClosingEventArgs e)
-        //{
-        //    CancelCaptureAndCloseReader(this.OnCaptured);
-        //}
+        private void frmDBEnrollment_FormClosing(object para)
+        {
+            CancelCaptureAndCloseReader(this.OnCaptured);
+        }
 
         public void ShowErrorDialog(string errorMessage)
         {

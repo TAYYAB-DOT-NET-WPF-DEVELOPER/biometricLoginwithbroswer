@@ -4,7 +4,9 @@
              xmlns:local="clr-namespace:MakeBroswer"
              
              >
+    
     <Application.Resources>
+        
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
 
@@ -19,6 +21,8 @@
                 <ResourceDictionary Source="Styles/TabStyles.xaml" />
                 <ResourceDictionary Source="Styles/ComboBoxStyle.xaml" />
                 <ResourceDictionary Source="Styles/checkBoxStyle.xaml" />
+                <ResourceDictionary Source="Styles/UrlTextBoxStyle.xaml" />
+                <ResourceDictionary Source="Styles/ActionButtonStyle.xaml" />
 
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
