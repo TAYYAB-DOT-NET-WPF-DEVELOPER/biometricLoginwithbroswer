@@ -2,8 +2,8 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
     <!-- Background Colors -->
-    <SolidColorBrush x:Key="PrimaryBackgroundColor" Color="#C0C9EA"/>
-    <SolidColorBrush x:Key="SecundaryBackgroundColor" Color="#EDF4FF"/>
+    <SolidColorBrush x:Key="PrimaryBackgroundColor" Color="Black"/>
+    <SolidColorBrush x:Key="SecundaryBackgroundColor" Color="White"/>
     <SolidColorBrush x:Key="TertiaryBackgroundColor" Color="#FFFFFF"/>
 
     <!-- System Colors -->
@@ -13,8 +13,8 @@
     <SolidColorBrush x:Key="TertiaryTextColor" Color="#1C3254"/>
 
     <!-- Blue Colors-->
-    <SolidColorBrush x:Key="PrimaryBlueColor" Color="#004FC4"/>
-    <SolidColorBrush x:Key="SecundaryBlueColor" Color="#0063F7"/>
+    <SolidColorBrush x:Key="PrimaryBlueColor" Color="DarkGray"/>
+    <SolidColorBrush x:Key="SecundaryBlueColor" Color="DarkGray"/>
     <SolidColorBrush x:Key="TertiaryBlueColor" Color="#5B8DEF"/>
 
     <!-- Red Colors-->
@@ -23,8 +23,8 @@
     <SolidColorBrush x:Key="TertiaryRedColor" Color="#FF5C5C"/>
 
     <!-- Green Colors-->
-    <SolidColorBrush x:Key="PrimaryGreenColor" Color="#05A660"/>
-    <SolidColorBrush x:Key="SecundaryGreenColor" Color="#06C270"/>
+    <SolidColorBrush x:Key="PrimaryGreenColor" Color="Black"/>
+    <SolidColorBrush x:Key="SecundaryGreenColor" Color="DarkGray"/>
     <SolidColorBrush x:Key="TertiaryGreenColor" Color="#39D98A"/>
 
     <!-- Orange Colors-->

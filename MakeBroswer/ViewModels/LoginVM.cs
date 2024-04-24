@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing.Imaging;
 using System.Drawing;
+using Microsoft.Web.WebView2.Core;
+using Microsoft.Web.WebView2.Wpf;
+
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -17,12 +20,44 @@ using System.IO;
 using System.Windows.Input;
 using static DPUruNet.Constants;
 using System.Net;
+using Newtonsoft.Json;
 
 namespace biometric_Login.ViewModels
 {
-    public class LoginVM:ViewModelBase
+    public class LoginVM : ViewModelBase
     {
+        int USERID = 0000;
+        private bool getuserid = false;
+        public ICommand ClearPinCommand { get; }
         public String connectionString = "Data Source = (DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = 182.180.159.89)(PORT = 1521)))(CONNECT_DATA = (SERVER = DEDICATED)(SERVICE_NAME = SCAR))); User Id = KRC; Password=KRC;";
+        private Window browserWindow;  // Field to hold the browser window instance
+        private HttpListener listener;
+        private Visibility _keypadVisibility = Visibility.Collapsed;
+        public Visibility KeypadVisibility
+        {
+            get { return _keypadVisibility; }
+            set
+            {
+                _keypadVisibility = value;
+                OnPropertyChanged(nameof(KeypadVisibility));
+            }
+        }
+        private string _pin;
+        public string Pin
+        {
+            get { return _pin; }
+            set
+            {
+                _pin = value;
+                OnPropertyChanged(nameof(Pin));
+                OnPropertyChanged(nameof(PinDisplay));
+            }
+        }
+        public string PinDisplay => new string('*', Pin?.Length ?? 0);
+
+        public ICommand ToggleKeypadCommand { get; }
+        public ICommand AppendPinCommand { get; }
+        private HttpListener listener2;
         private ObservableCollection<string> _devices;
         private readonly UserRegistrationVM _mainwindowVM;
         private readonly MainWindowVM _broserwindow;
@@ -62,28 +97,173 @@ namespace biometric_Login.ViewModels
         }
         public LoginVM(UserRegistrationVM mainwindowVM, MainWindowVM browswerwindow)
         {
-            LoginCommand = new RelayCommand(param => Load());
-            SignUpCommand = new RelayCommand (UserRegis);
+            //LoginCommand = new RelayCommand(param => Load());
+            LoginCommand = new RelayCommand(param => GotoMainWindow());
+            ToggleKeypadCommand = new RelayCommand(p => ToggleKeypad());
+            ClearPinCommand = new RelayCommand(p => Pin = string.Empty);
+            AppendPinCommand = new RelayCommand(AppendPin);
+            SignUpCommand = new RelayCommand(UserRegis);
             _mainwindowVM = mainwindowVM;
             _broserwindow = browswerwindow;
-            // InitializeComponent();
+            InitializeHttpListener();
+                  Load();
+        }
+        private void ToggleKeypad()
+        {
+            KeypadVisibility = KeypadVisibility == Visibility.Visible ? Visibility.Collapsed : Visibility.Visible;
+        }
+
+        private void AppendPin(object param)
+        {
+            if (param is string number)
+            {
+                Pin += number;
+            }
+        }
+        private void InitializeHttpListener()
+        {
+            listener = new HttpListener();
+            listener.Prefixes.Add("http://localhost:5001/");
+            listener.Start();
+            listener.BeginGetContext(new AsyncCallback(ListenerCallback), listener);
+            listener2 = new HttpListener();
+            listener2.Prefixes.Add("http://localhost:5002/");
+            listener2.Start();
+            listener2.BeginGetContext(new AsyncCallback(ListenerCallback2), listener2);
+
+        }
+        private void ListenerCallback2(IAsyncResult result)
+        {
+            HttpListener listener = (HttpListener)result.AsyncState;
+            HttpListenerContext context = listener.EndGetContext(result);
+            HttpListenerRequest request = context.Request;
+            HttpListenerResponse response = context.Response;
+            try
+            {
+                getuserid = true;
+                Load();
+                response.ContentType = "application/json";
+                var jsonResponse = new { USERID = USERID };
+                string jsonText = JsonConvert.SerializeObject(jsonResponse);
+                using (StreamWriter writer = new StreamWriter(response.OutputStream))
+                {
+                    writer.Write(jsonText);
+                }
+                response.StatusCode = 200;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error handling JSON request: " + ex.Message);
+                response.StatusCode = 500;
+            }
+            finally
+            {
+                response.Close();
+            }
+            listener.BeginGetContext(new AsyncCallback(ListenerCallback2), listener);
+        }
+        private void ListenerCallback(IAsyncResult result)
+        {
+            HttpListener listener = (HttpListener)result.AsyncState;
+            HttpListenerContext context = listener.EndGetContext(result);
+            listener.BeginGetContext(new AsyncCallback(ListenerCallback), listener);
+            HttpListenerRequest request = context.Request;
+            HttpListenerResponse response = context.Response;
+            try
+            {
+                CloseBrowserWindow();
+                using (StreamWriter writer = new StreamWriter(response.OutputStream))
+                {
+                    writer.WriteLine("Handled Request: Browser window should be closed.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log or handle the exception as needed
+                Console.WriteLine("Error handling request: " + ex.Message);
+            }
+            finally
+            {
+                // Always close the response to avoid resource leaks
+                response.Close();
+            }
+        }
+        public void Dispose()
+        {
+            listener?.Stop();
+            listener?.Close();
         }
         private void UserRegis(object obj)
         {
             Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
-                var window = new SaveFinger()
-                {
-                    DataContext = _mainwindowVM
-                };
-                window.Show();
-                Application.Current.MainWindow.Close();
-                Application.Current.MainWindow = window;
-                Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
+            var window = new SaveFinger()
+            {
+                DataContext = _mainwindowVM
+            };
+            window.Show();
+            Application.Current.MainWindow.Close();
+            Application.Current.MainWindow = window;
+            Mouse.OverrideCursor = System.Windows.Input.Cursors.Arrow;
         }
+        private void GotoMainWindow()
+        {
+            OracleConnection connection = new OracleConnection(connectionString);
+            connection.Open();
+            OracleCommand cmd = new OracleCommand("Select * from  SMUSER", connection);
+            OracleDataAdapter adapter = new OracleDataAdapter(cmd);
+            DataTable dt = new DataTable();
+            adapter.Fill(dt);
+            connection.Close();
+            if (dt.Rows.Count > 0)
+            {
+                foreach (DataRow row in dt.Rows)
+                {
+                    string password = row["PWD"].ToString();
+                    if (password == Pin)
+                    {
+                        string url = "https://alburoojmgmtconsultants.com/";
+                        Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            OpenFullScreenBrowser(url);
+                        });
+                    }
 
+                }
+                ShowErrorDialog("Wrong Password Please Try Again.");
+
+            }
+            //string url = "http://krc:7999/apex/f?p=105:11:::NO:111:P11_USERNAME,P11_PASSWORD:Controller,77779999";
+
+        }
+        private void OpenFullScreenBrowser(string url)
+        {
+            if (browserWindow != null)
+            {
+                browserWindow.Close();  // Close the existing window if it's already open
+            }
+
+            browserWindow = new Window
+            {
+                Topmost = true
+            };
+            var webView = new Microsoft.Web.WebView2.Wpf.WebView2();
+            webView.Source = new Uri(url);
+            browserWindow.Content = webView;
+            browserWindow.Show();
+        }
+        public void CloseBrowserWindow()
+        {
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                if (browserWindow != null)
+                {
+                    browserWindow.Close();
+                    browserWindow = null;  // Set to null after closing
+                }
+            });
+        }
         private void Load()
         {
-            // Call frmDBVerify_Load method
             frmDBVerify_Load(null, EventArgs.Empty);
         }
         private Reader currentReader;
@@ -100,28 +280,22 @@ namespace biometric_Login.ViewModels
         private void LoadScanners()
         {
             Devices = new ObservableCollection<string>();
-            // Devices.Clear();
-            //  cboReaders.SelectedIndex = -1;
-
             try
             {
                 _readers = ReaderCollection.GetReaders();
-
                 foreach (Reader Reader in _readers)
                 {
                     Devices.Add(Reader.Description.Name);
                 }
-
                 if (Devices.Count > 0)
                 {
                     ShowSuccessDialog("Finger Print Device Connected Successfully");
                     SelectedDevice = Devices[0];
-
                 }
                 else
                 {
-                    //btnSelect.Enabled = false;
-                    //btnCaps.Enabled = false;
+                    ShowErrorDialog("Unable to connect device.");
+                
                 }
             }
             catch (Exception ex)
@@ -188,7 +362,7 @@ namespace biometric_Login.ViewModels
                 return true;
             }
         }
-     //   private ReaderSelection _readerSelection;
+        //   private ReaderSelection _readerSelection;
         /// <summary>
         /// Hookup capture handler and start capture.
         /// </summary>
@@ -308,24 +482,14 @@ namespace biometric_Login.ViewModels
         {
             try
             {
-                // Check capture quality and throw an error if bad.
                 if (!CheckCaptureResult(captureResult)) return;
-
-                // Create bitmap
                 foreach (Fid.Fiv fiv in captureResult.Data.Views)
                 {
                     SendMessage(Action.SendBitmap, CreateBitmap(fiv.RawImage, fiv.Width, fiv.Height));
                 }
-
-                //Verification Code
                 try
                 {
-                    // Check capture quality and throw an error if bad.
                     if (!CheckCaptureResult(captureResult)) return;
-
-                  //  SendMessage(Action.SendMessage, "A finger was captured.");
-
-
                     DataResult<Fmd> resultConversion = FeatureExtraction.CreateFmdFromFid(captureResult.Data, Constants.Formats.Fmd.ANSI);
                     if (resultConversion.ResultCode != Constants.ResultCode.DP_SUCCESS)
                     {
@@ -335,7 +499,6 @@ namespace biometric_Login.ViewModels
                         }
                         throw new Exception(resultConversion.ResultCode.ToString());
                     }
-
                     firstFinger = resultConversion.Data;
                     OracleConnection connection = new OracleConnection(connectionString);
                     connection.Open();
@@ -350,8 +513,8 @@ namespace biometric_Login.ViewModels
                     {
                         for (int i = 0; i < dt.Rows.Count; i++)
                         {
+                            var userid = dt.Rows[i]["UserID"].ToString();
                             lstledgerIds.Add(dt.Rows[i]["UserID"].ToString());
-                            // Fmd val = Fmd.DeserializeXml(dt.Rows[i]["fingerdata"].ToString());
                             byte[] fingerDataBytes = (byte[])dt.Rows[i]["fingerdata"];
                             string fingerDataXml = System.Text.Encoding.UTF8.GetString(fingerDataBytes);
                             Fmd val = Fmd.DeserializeXml(fingerDataXml);
@@ -364,17 +527,16 @@ namespace biometric_Login.ViewModels
                             if (Convert.ToDouble(compare.Score.ToString()) == 0)
                             {
                                 count++;
-                                Application.Current.Dispatcher.Invoke(() =>
+                                if (getuserid)
                                 {
-                                    var window = new MainWindow()
-                                    {
-                                        DataContext = _broserwindow
-                                    };
-                                    window.Show();
-                                    Application.Current.MainWindow.Close();
-                                    Application.Current.MainWindow = window;
-                                    Mouse.OverrideCursor = Cursors.Arrow;
-                                });
+                                    USERID = Convert.ToInt32(userid);
+                                    
+                                    getuserid = false;
+                                }
+                                else
+                                {
+                                    GotoMainWindow();
+                                }
                             }
 
                         }
@@ -457,12 +619,17 @@ namespace biometric_Login.ViewModels
         }
         private void frmDBVerify_Load(object sender, EventArgs e)
         {
-            // Reset variables
             LoadScanners();
+            if (Devices.Count == 0) // Check if any devices are connected
+            {
+                firstFinger = null;
+                resultEnrollment = null;
+                preenrollmentFmds = new List<Fmd>();
+                return; // Exit the method if no devices are connected
+            }
             firstFinger = null;
             resultEnrollment = null;
             preenrollmentFmds = new List<Fmd>();
-           // pbFingerprint.Image = null;
             if (CurrentReader != null)
             {
                 CurrentReader.Dispose();

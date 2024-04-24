@@ -8,15 +8,14 @@
         xmlns:viewmodels="clr-namespace:biometric_Login.ViewModels" 
         d:DataContext="{d:DesignInstance Type=viewmodels:LoginVM}"
         mc:Ignorable="d" 
-        Title="Back Office" 
-        Height="360" 
-        Width="550"
+        
+        
         WindowStartupLocation="CenterScreen" 
         WindowStyle="None"
         Background="Transparent" 
         AllowsTransparency="True"
         ResizeMode="NoResize" 
-        WindowState="Normal" 
+        WindowState="Maximized" 
         FontFamily="Poppins"
        
         >
@@ -29,88 +28,46 @@
     <Window.InputBindings>
         <KeyBinding Key="Enter" Command="{Binding LoginCommand}" />
     </Window.InputBindings>
-    <Border CornerRadius="10" Background="{DynamicResource PrimaryBackgroundColor}">
-        <Grid>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="275"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
+    <Grid Background="White">
 
-            <!-- Start: GridColumn Left -->
-            <Border CornerRadius="10 0 0 10"
-                    Padding="10"
-                    Background="{DynamicResource SecundaryBackgroundColor}">
-                <Grid x:Name="gridMenu">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="60"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
+        <!-- Header -->
+        <Border Background="Black" Height="100" VerticalAlignment="Top">
+            <TextBlock Text="Sign In POS1 Application" Foreground="White" FontSize="24" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        </Border>
 
-                    <!-- Logo -->
-                    <StackPanel Grid.Row="0" Orientation="Horizontal">
-                        <Image Source="/Assets/Images/Logo.png" Stretch="Fill" Height="36" Width="36" VerticalAlignment="Center" Margin="10 0 0 0"/>
-                        <Label Content="LOGIN" Foreground="{DynamicResource SecundaryBlueColor}" FontWeight="Bold" FontSize="24" VerticalAlignment="Center" HorizontalContentAlignment="Left" HorizontalAlignment="Left" Margin="5 0 0 0"/>
-                    </StackPanel>
+        <!-- Sign In Form -->
+        <Border Background="White" BorderBrush="Black" BorderThickness="1" CornerRadius="5" Width="300" Height="200" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <StackPanel Orientation="Vertical" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBox x:Name="description" 
+                 Style="{DynamicResource TextBoxStyle}"
+                 Width="250"
+                 Text="{Binding PinDisplay, Mode=OneWay}" />
+                <Button Content="Manual Login" Command="{Binding ToggleKeypadCommand}" Style="{DynamicResource CreateButton}" Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
 
-                    <StackPanel Grid.Row="1" Margin="0,30,0,0">
-                        <Image Source="{Binding SelectedImage, Converter={StaticResource ByteArrayToImageConverter}}" Width="200" Height="200" />
-                    </StackPanel>
-                </Grid>
-            </Border>
-            <!-- End: GridColumn Left -->
+        <!-- Keypad Popup aligned to the right -->
+        <Border Background="#333" Padding="10" Visibility="{Binding KeypadVisibility}" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="20">
+            <UniformGrid Rows="4" Columns="3" HorizontalAlignment="Center" VerticalAlignment="Bottom">
+                <Button Content="1" Command="{Binding AppendPinCommand}" CommandParameter="1" Style="{StaticResource KeypadButtonStyle}"/>
+                <Button Content="2" Command="{Binding AppendPinCommand}" CommandParameter="2" Style="{StaticResource KeypadButtonStyle}"/>
+                <Button Content="3" Command="{Binding AppendPinCommand}" CommandParameter="3" Style="{StaticResource KeypadButtonStyle}"/>
+                <Button Content="4" Command="{Binding AppendPinCommand}" CommandParameter="4" Style="{StaticResource KeypadButtonStyle}"/>
+                <Button Content="5" Command="{Binding AppendPinCommand}" CommandParameter="5" Style="{StaticResource KeypadButtonStyle}"/>
+                <Button Content="6" Command="{Binding AppendPinCommand}" CommandParameter="6" Style="{StaticResource KeypadButtonStyle}"/>
+                <Button Content="7" Command="{Binding AppendPinCommand}" CommandParameter="7" Style="{StaticResource KeypadButtonStyle}"/>
+                <Button Content="8" Command="{Binding AppendPinCommand}" CommandParameter="8" Style="{StaticResource KeypadButtonStyle}"/>
+                <Button Content="9" Command="{Binding AppendPinCommand}" CommandParameter="9" Style="{StaticResource KeypadButtonStyle}"/>
+                <Button Content="C" Command="{Binding ClearPinCommand}" Style="{StaticResource KeypadButtonStyle}"/>
+                <Button Content="0" Command="{Binding AppendPinCommand}" CommandParameter="0" Style="{StaticResource KeypadButtonStyle}"/>
+                <Button Content="Enter" Command="{Binding LoginCommand}" Style="{StaticResource KeypadButtonStyle}"/>
+            </UniformGrid>
 
-            <Grid Grid.Column="1" >
-                <Border  CornerRadius="0 10 10 0"
-                         Background="{DynamicResource PrimaryBackgroundColor}">
+        </Border>
 
-                    <StackPanel Grid.Column="1" >
-                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,10">
-                            <Label Content="LOGIN" Foreground="{DynamicResource SecundaryBlueColor}" FontWeight="Bold" FontSize="24" HorizontalContentAlignment="Left"/>
-                        </StackPanel>
-                        <!-- UserName Field -->
-                        <StackPanel Margin="0,0,0,5" HorizontalAlignment="Center">
-                            <!--<Label Content="User Name" Foreground="{DynamicResource TertiaryTextColor}" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" HorizontalContentAlignment="Left" HorizontalAlignment="Left"/>
-                            <TextBox x:Name="UsernameTextBox" 
-                                     Style="{DynamicResource TextBoxStyle}"
-                                     Width="200"
-                                     Text="{Binding Username, UpdateSourceTrigger=PropertyChanged}" />-->
-                            <!--<StackPanel Orientation="Horizontal">
-                                <Label Content="Image" Foreground="{DynamicResource TertiaryTextColor}" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" HorizontalContentAlignment="Left" HorizontalAlignment="Left"/>
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Image Source="/Assets/Images/Login-Image.jpg" Stretch="Fill"  VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                            </StackPanel>-->
-                        </StackPanel>
-
-                        <!-- Password Field -->
-                        <!--<StackPanel HorizontalAlignment="Center" >
-                            <Label Content="Password" Foreground="{DynamicResource TertiaryTextColor}" FontWeight="SemiBold" FontSize="14" VerticalAlignment="Center" HorizontalContentAlignment="Left" HorizontalAlignment="Left"/>
-
-                            <customcontrols:BindablePasswordBox x:Name="pwdbox" Password="{Binding Password,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                Width="200"
-                                                    Tag="Password"
-                                                Background="{x:Null}">
-                            </customcontrols:BindablePasswordBox>
-                        </StackPanel>-->
-
-                        <!-- Login Button -->
-                        <Button Content="Login" 
-                            Style="{DynamicResource LoginButton}" 
-                            Command="{Binding LoginCommand}" 
-                            Margin="0,15,0,0"/>
-                        <Button Content="Sign Up Now" 
-                            Style="{DynamicResource LoginButton}" 
-                            Command="{Binding SignUpCommand}" 
-                            Margin="0,15,0,0"/>
-
-                       
-                    </StackPanel>
-
-                </Border>
-
-            </Grid>
-            
-        </Grid>
-        
-    </Border>
+        <!-- Footer with Branding aligned to the left -->
+        <Border VerticalAlignment="Bottom" HorizontalAlignment="Left" Margin="20">
+            <TextBlock Text="POWERED BY we creatives" Foreground="Green" FontWeight="Bold" FontSize="14"/>
+        </Border>
+    </Grid>
 </Window>
